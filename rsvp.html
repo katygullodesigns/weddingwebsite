@@ -1,0 +1,166 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#1c2748">
+
+    <title>RSVP | Katy &amp; Michael</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <a class="monogram"
+           href="index.html">
+        <img src="assets/logo.svg">
+        </a>
+           
+
+        <button
+            class="menu-toggle"
+            type="button"
+            aria-label="Toggle navigation"
+            aria-expanded="false"
+            aria-controls="main-nav">
+            ☰
+        </button>
+
+        <nav class="nav" id="main-nav">
+            <a href="index.html">Home</a>
+            <a href="info.html">Info</a>
+            <a href="photos.html">Photos</a>
+            <a class="active" href="rsvp.html" aria-current="page">RSVP</a>
+        </nav>
+    </header>
+
+    <main class="page-main rsvp-main">
+        <h1 class="page-title">RSVP</h1>
+
+        <p class="page-lead">
+            We hope you can celebrate with us.
+            Please reply below.
+        </p>
+
+        <form id="rsvp-form" class="rsvp-form">
+            <label for="name">Name *</label>
+            <input
+                id="name"
+                name="name"
+                type="text"
+                autocomplete="name"
+                required>
+
+            <label for="guest-name">Guest Name</label>
+            <input
+                id="guest-name"
+                name="guestName"
+                type="text"
+                placeholder="Leave blank if attending solo">
+
+            <label for="phone">Phone Number</label>
+            <input
+                id="phone"
+                name="phone"
+                type="tel"
+                autocomplete="tel">
+
+            <label for="email">Email *</label>
+            <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required>
+
+            <fieldset>
+                <legend>Will you be attending? *</legend>
+
+                <div class="choice-row">
+                    <label class="choice">
+                        <input
+                            type="radio"
+                            name="attending"
+                            value="yes"
+                            required>
+                        <span>YES</span>
+                    </label>
+
+                    <label class="choice">
+                        <input
+                            type="radio"
+                            name="attending"
+                            value="no"
+                            required>
+                        <span>NO</span>
+                    </label>
+                </div>
+            </fieldset>
+
+            <section class="form-links" aria-labelledby="forms-heading">
+                <p id="forms-heading">Fill Out Forms</p>
+
+                <a
+                    href="https://forms.gle/e74NQ37evuPxYLM58"
+                    class="form-link"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    Food / Drink Preferences ↗
+                </a>
+
+                <a
+                    href="assets/rules.pdf"
+                    class="form-link"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    Rule Agreement (PDF) ↗
+                </a>
+            </section>
+
+            <section id="rules" class="extra-fields">
+                <h2>Rule Agreement</h2>
+
+                <label class="agreement">
+                    <input
+                        type="checkbox"
+                        name="agreement"
+                        required>
+                    <span>
+                        I have reviewed the Rule Agreement and agree
+                        to follow the event and venue guidelines.
+                    </span>
+                </label>
+            </section>
+
+            <button
+                class="button button-dark save-button"
+                type="submit">
+                SAVE RSVP
+            </button>
+
+            <p
+                id="form-message"
+                class="form-message"
+                role="status"
+                aria-live="polite"></p>
+        </form>
+
+        <p class="form-note">
+            Please submit one RSVP per invitation.
+            Thank you for responding!
+        </p>
+    </main>
+
+    <footer>
+        Website designed and developed by KatyGulloDesigns
+    </footer>
+
+    <!-- Supabase JavaScript library -->
+    <script src="https://pyxfwqtulqrpikkkubyx.supabase.co/rest/v1/"></script>
+
+    <!-- Your website JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
