@@ -30,8 +30,8 @@ html {
 
 body {
   margin: 0;
-  background: var(--navy);
-  color: var(--gold);
+  background: var(--muted);
+  color: var(--white);
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: 19px;
   line-height: 1.45;
@@ -123,7 +123,7 @@ p {
 
 .nav a:hover,
 .nav a.active {
-  color: var(--gold);
+  color: var(--white);
 }
 
 .menu-toggle {
@@ -131,7 +131,7 @@ p {
   padding: 5px;
   border: 0;
   background: transparent;
-  color: var(--gold);
+  color: var(--white);
   font-size: 27px;
 }
 
@@ -170,7 +170,7 @@ p {
   position: absolute;
   top: 34%;
   left: 50%;
-  color: var(--gold);
+  color: var(--white);
   font-family: 'Great Vibes', cursive;
   font-size: clamp(95px, 15vw, 180px);
   line-height: 1;
@@ -238,7 +238,7 @@ p {
 
 .date-card .eyebrow {
   margin-bottom: 42px;
-  color: var(--gold);
+  color: var(--white);
   font-size: clamp(25px, 3.5vw, 38px);
   letter-spacing: 0;
 }
@@ -283,7 +283,7 @@ p {
 }
 
 .button-muted {
-  background: var(--navy);
+  background: var(--muted);
   color: #7e89a8;
 }
 
@@ -344,7 +344,7 @@ footer {
 .accordion {
   margin: 0 0 20px;
   background: var(--slate);
-  color: var(--gold);
+  color: var(--white);
 }
 
 .accordion summary {
@@ -510,7 +510,7 @@ footer {
 
 .rsvp-form input:focus,
 .rsvp-form textarea:focus {
-  outline-color: var(--gold);
+  outline-color: var(--white);
 }
 
 .rsvp-form fieldset {
@@ -551,7 +551,7 @@ footer {
 }
 
 .choice input:checked + span {
-  outline: 2px solid var(--gold);
+  outline: 2px solid var(--white);
   background: var(--slate-dark);
 }
 
@@ -599,7 +599,7 @@ footer {
 
 .agreement input {
   margin-top: 7px;
-  accent-color: var(--gold);
+  accent-color: var(--white);
 }
 
 .save-button {
@@ -664,7 +664,7 @@ footer {
       rgba(89, 101, 133, 0.22),
       transparent 70%
     ),
-    var(--navy);
+    var(--muted;
   isolation: isolate;
 }
 
@@ -726,14 +726,14 @@ footer {
 }
 
 .hero-caption span {
-  color: var(--gold);
+  color: var(--white);
 }
 
 .hero-corner {
   position: absolute;
   width: 16px;
   height: 16px;
-  border: 0 solid var(--gold);
+  border: 0 solid var(--white);
   opacity: 0.8;
   pointer-events: none;
 }
@@ -834,7 +834,7 @@ footer {
   left: 0;
   width: 1px;
   height: 12px;
-  background: var(--gold);
+  background: var(--white);
   content: '';
   animation: hint-drop 1.7s ease-in-out infinite;
 }
