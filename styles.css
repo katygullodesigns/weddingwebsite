@@ -30,7 +30,7 @@ html {
 
 body {
   margin: 0;
-  background: var(--muted);
+  background: var(--slate);
   color: var(--white);
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: 19px;
@@ -195,7 +195,7 @@ p {
 
 .eyebrow {
   margin: 0 0 8px;
-  color: var(--muted);
+  color: var(--slate);
   font-size: 14px;
   letter-spacing: 0.13em;
 }
@@ -283,7 +283,7 @@ p {
 }
 
 .button-muted {
-  background: var(--muted);
+  background: var(--slate);
   color: #7e89a8;
 }
 
@@ -664,7 +664,7 @@ footer {
       rgba(89, 101, 133, 0.22),
       transparent 70%
     ),
-    var(--muted;
+    var(--slate;
   isolation: isolate;
 }
 
