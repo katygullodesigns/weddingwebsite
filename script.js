@@ -239,6 +239,8 @@ if (rsvpForm && formMessage && saveButton) {
             formMessage.textContent =
                 "Thank you! Your RSVP has been received.";
 
+           console.log("RSVP INSERT RESULT:", rsvp)
+
             rsvpForm.reset();
 
 
