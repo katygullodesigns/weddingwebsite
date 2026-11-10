@@ -3,10 +3,10 @@
    SUPABASE CONNECTION
 ================================== */
 
-const SUPABASE_URL = "https://pyxfwqtulqrpikkkubyx.supabase.co";
+const SUPABASE_URL = "https://thseosxdtlupgdxnmnmz.supabase.co";
 
 const SUPABASE_ANON_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRoc2Vvc3hkdGx1cGdkeG5tbm16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQzNTIyMzksImV4cCI6MjEwOTkyODIzOX0.bESHZLOOcqfRWTjUkuPOqoMfQEBidtxsR2VuipXlhxw";
+    "sb_publishable_jxFofgQXk61zOWqEASuX6A_AzrGSq2Y";
 
 const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
