@@ -1,12 +1,25 @@
 
-/* ==================================
-   SUPABASE CONNECTION
-================================== */
+/* =========================================================
+   KATY & MICHAEL
+   WEDDING WEBSITE JAVASCRIPT
+========================================================= */
 
-const SUPABASE_URL = "https://pyxfwqtulqrpikkkubyx.supabase.co";
+
+/* =========================================================
+   1. SUPABASE CONNECTION
+========================================================= */
+
+const SUPABASE_URL =
+    "https://pyxfwqtulqrpikkkubyx.supabase.co";
 
 const SUPABASE_ANON_KEY =
-    "sb_publishable_JaQdUZhFBgOSvWiOE2ANzA_aLzNy4vT";
+    "YOUR_EXISTING_SUPABASE_PUBLISHABLE_KEY";
+
+if (!window.supabase) {
+    throw new Error(
+        "Supabase library failed to load. Check the Supabase script tag in your HTML."
+    );
+}
 
 const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
@@ -14,9 +27,9 @@ const supabaseClient = window.supabase.createClient(
 );
 
 
-/* ==================================
-   MOBILE NAVIGATION
-================================== */
+/* =========================================================
+   2. MOBILE NAVIGATION
+========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -37,16 +50,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
             nav.classList.toggle("open", !isExpanded);
 
-            menuToggle.textContent = isExpanded ? "☰" : "×";
+            menuToggle.textContent =
+                isExpanded ? "☰" : "×";
+
+        });
+
+
+        // Close mobile navigation after selecting a link
+
+        nav.querySelectorAll("a").forEach((link) => {
+
+            link.addEventListener("click", () => {
+
+                nav.classList.remove("open");
+
+                menuToggle.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+                menuToggle.textContent = "☰";
+
+            });
 
         });
 
     }
 
 
-    /* ==================================
-       GALLERY LIGHTBOX
-    ================================== */
+    /* =====================================================
+       3. GALLERY LIGHTBOX
+    ===================================================== */
 
     const lightbox = document.querySelector(".lightbox");
 
@@ -64,18 +98,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
             lightbox.setAttribute("aria-hidden", "true");
 
-            largeImage.src = "";
+            if (largeImage) {
+                largeImage.src = "";
+            }
 
         };
 
+
+        // Open gallery images
 
         document.querySelectorAll(".photo-tile").forEach((tile) => {
 
             tile.addEventListener("click", () => {
 
+                if (!largeImage) return;
+
                 const thumbnail = tile.querySelector("img");
 
-                largeImage.src = tile.dataset.full;
+                const fullImage =
+                    tile.dataset.full ||
+                    thumbnail?.src;
+
+                if (!fullImage) return;
+
+                largeImage.src = fullImage;
 
                 largeImage.alt = thumbnail
                     ? thumbnail.alt
@@ -90,6 +136,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 
+        // Close button
+
         if (closeButton) {
 
             closeButton.addEventListener(
@@ -99,6 +147,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
 
+
+        // Close when clicking outside the image
 
         lightbox.addEventListener("click", (event) => {
 
@@ -110,6 +160,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         });
 
+
+        // Close with Escape key
 
         document.addEventListener("keydown", (event) => {
 
@@ -126,15 +178,18 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-/* ==================================
-   RSVP FORM SUBMISSION
-================================== */
+/* =========================================================
+   4. RSVP FORM SUBMISSION
+========================================================= */
 
-const rsvpForm = document.getElementById("rsvp-form");
+const rsvpForm =
+    document.getElementById("rsvp-form");
 
-const formMessage = document.getElementById("form-message");
+const formMessage =
+    document.getElementById("form-message");
 
-const saveButton = rsvpForm?.querySelector('[type="submit"]');
+const saveButton =
+    rsvpForm?.querySelector('[type="submit"]');
 
 
 if (rsvpForm && formMessage && saveButton) {
@@ -144,19 +199,20 @@ if (rsvpForm && formMessage && saveButton) {
         event.preventDefault();
 
 
-        /* Validate required form fields */
+        /* -----------------------------------------------
+           VALIDATE FORM
+        ----------------------------------------------- */
 
         if (!rsvpForm.reportValidity()) {
-
             return;
-
         }
 
 
+        /* -----------------------------------------------
+           COLLECT FORM INFORMATION
+        ----------------------------------------------- */
+
         const formData = new FormData(rsvpForm);
-
-
-        /* Collect RSVP information */
 
         const rsvp = {
 
@@ -184,7 +240,9 @@ if (rsvpForm && formMessage && saveButton) {
         };
 
 
-        /* Check agreement */
+        /* -----------------------------------------------
+           CHECK AGREEMENT
+        ----------------------------------------------- */
 
         if (!rsvp.agreement) {
 
@@ -196,7 +254,9 @@ if (rsvpForm && formMessage && saveButton) {
         }
 
 
-        /* Check attendance selection */
+        /* -----------------------------------------------
+           CHECK ATTENDANCE
+        ----------------------------------------------- */
 
         if (!["yes", "no"].includes(rsvp.attending)) {
 
@@ -208,7 +268,9 @@ if (rsvpForm && formMessage && saveButton) {
         }
 
 
-        /* Update button and message */
+        /* -----------------------------------------------
+           PREPARE SUBMISSION
+        ----------------------------------------------- */
 
         saveButton.disabled = true;
 
@@ -218,44 +280,67 @@ if (rsvpForm && formMessage && saveButton) {
             "Submitting your RSVP...";
 
 
-        /* Submit RSVP to Supabase */
+        /* -----------------------------------------------
+           SEND RSVP TO SUPABASE
+        ----------------------------------------------- */
 
         try {
 
-            const { data, error, status } = await supabaseClient
-    .from("rsvps")
-    .insert([rsvp])
-    .select();
-
-console.log("SUPABASE STATUS:", status);
-console.log("SUPABASE DATA:", data);
-console.log("SUPABASE ERROR:", error);
-
-if (error) {
-    throw error;
-}
-
-if (!data || data.length === 0) {
-    throw new Error("Supabase did not return a saved RSVP.");
-}
+            const { error, status } = await supabaseClient
+                .from("rsvps")
+                .insert([rsvp]);
 
 
-            /* Successful submission */
+            console.log(
+                "SUPABASE RESPONSE STATUS:",
+                status
+            );
+
+
+            if (error) {
+
+                console.error(
+                    "SUPABASE INSERT ERROR:",
+                    error
+                );
+
+                throw error;
+
+            }
+
+
+            /* -------------------------------------------
+               SUCCESSFUL SUBMISSION
+            ------------------------------------------- */
+
+            console.log(
+                "RSVP SUCCESSFULLY SUBMITTED:",
+                rsvp
+            );
 
             formMessage.textContent =
                 "Thank you! Your RSVP has been received.";
-
-           console.log("RSVP INSERT RESULT:", rsvp)
 
             rsvpForm.reset();
 
 
         } catch (error) {
 
+            /* -------------------------------------------
+               SUBMISSION FAILED
+            ------------------------------------------- */
+
             console.error(
-                "RSVP submission failed:",
-                error
+                "RSVP SUBMISSION FAILED:",
+                {
+                    message: error.message,
+                    code: error.code,
+                    details: error.details,
+                    hint: error.hint,
+                    status: error.status
+                }
             );
+
 
             formMessage.textContent =
                 "We couldn't save your RSVP. Please try again. " +
@@ -263,6 +348,10 @@ if (!data || data.length === 0) {
 
 
         } finally {
+
+            /* -------------------------------------------
+               RESTORE SUBMIT BUTTON
+            ------------------------------------------- */
 
             saveButton.disabled = false;
 
@@ -275,15 +364,17 @@ if (!data || data.length === 0) {
 }
 
 
-/* ==================================
-   SCROLL-LINKED HERO ANIMATION
-================================== */
+/* =========================================================
+   5. SCROLL-LINKED HERO ANIMATION
+========================================================= */
 
 (() => {
 
-    const stage = document.getElementById("hero-stage");
+    const stage =
+        document.getElementById("hero-stage");
 
-    const frame = document.getElementById("wedding-hero-frame");
+    const frame =
+        document.getElementById("wedding-hero-frame");
 
     const topHeading =
         document.getElementById("hero-heading-top");
@@ -291,8 +382,11 @@ if (!data || data.length === 0) {
     const bottomHeading =
         document.getElementById("hero-heading-bottom");
 
-    const hint = document.getElementById("scroll-hint");
+    const hint =
+        document.getElementById("scroll-hint");
 
+
+    // Stop if this page doesn't contain the hero elements
 
     if (
         !stage ||
@@ -307,6 +401,10 @@ if (!data || data.length === 0) {
     }
 
 
+    /* -----------------------------------------------
+       REDUCED MOTION ACCESSIBILITY
+    ----------------------------------------------- */
+
     const reduceMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)"
     ).matches;
@@ -315,10 +413,13 @@ if (!data || data.length === 0) {
     let scheduled = false;
 
 
+    /* -----------------------------------------------
+       UPDATE HERO BASED ON SCROLL POSITION
+    ----------------------------------------------- */
+
     function updateHero() {
 
         scheduled = false;
-
 
         const rect = stage.getBoundingClientRect();
 
@@ -334,15 +435,20 @@ if (!data || data.length === 0) {
         );
 
 
+        // Smooth easing
+
         const eased =
             progress * progress * (3 - 2 * progress);
 
+
+        /* -------------------------------------------
+           INITIAL FRAME DIMENSIONS
+        ------------------------------------------- */
 
         const startWidth = Math.min(
             window.innerWidth * 0.84,
             940
         );
-
 
         const startHeight = Math.min(
             window.innerWidth * 0.47,
@@ -350,50 +456,69 @@ if (!data || data.length === 0) {
         );
 
 
+        /* -------------------------------------------
+           ANIMATE FRAME DIMENSIONS
+        ------------------------------------------- */
+
         const width =
             startWidth +
             (window.innerWidth - startWidth) * eased;
 
-
         const height =
             startHeight +
             (window.innerHeight - startHeight) * eased;
-
 
         const padding = 11 * (1 - eased);
 
 
         if (!reduceMotion) {
 
-            frame.style.width = `${width}px`;
+            frame.style.width =
+                `${width}px`;
 
-            frame.style.height = `${height}px`;
+            frame.style.height =
+                `${height}px`;
 
-            frame.style.padding = `${padding}px`;
+            frame.style.padding =
+                `${padding}px`;
 
+
+            /* ---------------------------------------
+               FRAME BORDER
+            --------------------------------------- */
 
             frame.style.borderColor =
                 `rgba(231,185,31,${0.48 * (1 - eased)})`;
 
+
+            /* ---------------------------------------
+               HEADING FADE
+            --------------------------------------- */
 
             const fade = Math.max(
                 0,
                 1 - progress / 0.38
             );
 
-
             topHeading.style.opacity = fade;
 
             bottomHeading.style.opacity = fade;
 
 
+            /* ---------------------------------------
+               HEADING MOVEMENT
+            --------------------------------------- */
+
             topHeading.style.transform =
                 `translateY(${-progress * 95}px)`;
-
 
             bottomHeading.style.transform =
                 `translateY(${progress * 95}px)`;
 
+
+            /* ---------------------------------------
+               SCROLL HINT FADE
+            --------------------------------------- */
 
             hint.style.opacity = String(
                 Math.max(0, 1 - progress / 0.12)
@@ -403,6 +528,10 @@ if (!data || data.length === 0) {
 
     }
 
+
+    /* -----------------------------------------------
+       REQUEST ANIMATION FRAME
+    ----------------------------------------------- */
 
     function requestUpdate() {
 
@@ -417,18 +546,23 @@ if (!data || data.length === 0) {
     }
 
 
+    /* -----------------------------------------------
+       SCROLL AND RESIZE LISTENERS
+    ----------------------------------------------- */
+
     window.addEventListener(
         "scroll",
         requestUpdate,
         { passive: true }
     );
 
-
     window.addEventListener(
         "resize",
         requestUpdate
     );
 
+
+    // Initial animation position
 
     updateHero();
 
