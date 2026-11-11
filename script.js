@@ -13,7 +13,7 @@ const SUPABASE_URL =
     "https://pyxfwqtulqrpikkkubyx.supabase.co";
 
 const SUPABASE_ANON_KEY =
-    "YOUR_EXISTING_SUPABASE_PUBLISHABLE_KEY";
+    "sb_publishable_JaQdUZhFBgOSvWiOE2ANzA_aLzNy4vT";
 
 if (!window.supabase) {
     throw new Error(
