@@ -3,7 +3,7 @@
    SUPABASE CONNECTION
 ================================== */
 
-const SUPABASE_URL = "https://pyxfwqtulqrpikkkubyx.supabase.co/rest/v1/";
+const SUPABASE_URL = "https://pyxfwqtulqrpikkkubyx.supabase.co";
 
 const SUPABASE_ANON_KEY =
     "sb_publishable_JaQdUZhFBgOSvWiOE2ANzA_aLzNy4vT";
