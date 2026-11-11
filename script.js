@@ -222,16 +222,22 @@ if (rsvpForm && formMessage && saveButton) {
 
         try {
 
-            const { error } = await supabaseClient
-                .from("rsvps")
-                .insert([rsvp]);
+            const { data, error, status } = await supabaseClient
+    .from("rsvps")
+    .insert([rsvp])
+    .select();
 
+console.log("SUPABASE STATUS:", status);
+console.log("SUPABASE DATA:", data);
+console.log("SUPABASE ERROR:", error);
 
-            if (error) {
+if (error) {
+    throw error;
+}
 
-                throw error;
-
-            }
+if (!data || data.length === 0) {
+    throw new Error("Supabase did not return a saved RSVP.");
+}
 
 
             /* Successful submission */
