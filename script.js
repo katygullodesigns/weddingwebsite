@@ -1,7 +1,14 @@
 
 /* =========================================================
    KATY & MICHAEL
-   WEDDING WEBSITE JAVASCRIPT
+   COMPLETE WEDDING WEBSITE JAVASCRIPT
+
+   Includes:
+   1. Supabase connection
+   2. Mobile navigation
+   3. Photo gallery lightbox
+   4. RSVP submissions
+   5. Cinematic scrolling photo animation
 ========================================================= */
 
 
@@ -15,204 +22,277 @@ const SUPABASE_URL =
 const SUPABASE_ANON_KEY =
     "sb_publishable_JaQdUZhFBgOSvWiOE2ANzA_aLzNy4vT";
 
-if (!window.supabase) {
-    throw new Error(
-        "Supabase library failed to load. Check the Supabase script tag in your HTML."
-    );
-}
+let supabaseClient = null;
 
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-);
+if (window.supabase) {
+
+    supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+} else {
+
+    console.error(
+        "Supabase failed to load. Check the Supabase CDN script."
+    );
+
+}
 
 
 /* =========================================================
-   2. MOBILE NAVIGATION
+   2. INITIALIZE WEBSITE FEATURES
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    const menuToggle = document.querySelector(".menu-toggle");
-    const nav = document.querySelector(".nav");
+    initializeNavigation();
 
-    if (menuToggle && nav) {
+    initializeGallery();
 
-        menuToggle.addEventListener("click", () => {
+    initializeRSVP();
 
-            const isExpanded =
-                menuToggle.getAttribute("aria-expanded") === "true";
-
-            menuToggle.setAttribute(
-                "aria-expanded",
-                String(!isExpanded)
-            );
-
-            nav.classList.toggle("open", !isExpanded);
-
-            menuToggle.textContent =
-                isExpanded ? "☰" : "×";
-
-        });
-
-
-        // Close mobile navigation after selecting a link
-
-        nav.querySelectorAll("a").forEach((link) => {
-
-            link.addEventListener("click", () => {
-
-                nav.classList.remove("open");
-
-                menuToggle.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-
-                menuToggle.textContent = "☰";
-
-            });
-
-        });
-
-    }
-
-
-    /* =====================================================
-       3. GALLERY LIGHTBOX
-    ===================================================== */
-
-    const lightbox = document.querySelector(".lightbox");
-
-    if (lightbox) {
-
-        const largeImage = lightbox.querySelector("img");
-
-        const closeButton =
-            lightbox.querySelector(".lightbox-close");
-
-
-        const closeLightbox = () => {
-
-            lightbox.classList.remove("open");
-
-            lightbox.setAttribute("aria-hidden", "true");
-
-            if (largeImage) {
-                largeImage.src = "";
-            }
-
-        };
-
-
-        // Open gallery images
-
-        document.querySelectorAll(".photo-tile").forEach((tile) => {
-
-            tile.addEventListener("click", () => {
-
-                if (!largeImage) return;
-
-                const thumbnail = tile.querySelector("img");
-
-                const fullImage =
-                    tile.dataset.full ||
-                    thumbnail?.src;
-
-                if (!fullImage) return;
-
-                largeImage.src = fullImage;
-
-                largeImage.alt = thumbnail
-                    ? thumbnail.alt
-                    : "Wedding photo";
-
-                lightbox.classList.add("open");
-
-                lightbox.setAttribute("aria-hidden", "false");
-
-            });
-
-        });
-
-
-        // Close button
-
-        if (closeButton) {
-
-            closeButton.addEventListener(
-                "click",
-                closeLightbox
-            );
-
-        }
-
-
-        // Close when clicking outside the image
-
-        lightbox.addEventListener("click", (event) => {
-
-            if (event.target === lightbox) {
-
-                closeLightbox();
-
-            }
-
-        });
-
-
-        // Close with Escape key
-
-        document.addEventListener("keydown", (event) => {
-
-            if (event.key === "Escape") {
-
-                closeLightbox();
-
-            }
-
-        });
-
-    }
+    initializeWeddingHero();
 
 });
 
 
 /* =========================================================
-   4. RSVP FORM SUBMISSION
+   3. MOBILE NAVIGATION
 ========================================================= */
 
-const rsvpForm =
-    document.getElementById("rsvp-form");
+function initializeNavigation() {
 
-const formMessage =
-    document.getElementById("form-message");
+    const menuToggle =
+        document.querySelector(".menu-toggle");
 
-const saveButton =
-    rsvpForm?.querySelector('[type="submit"]');
+    const nav =
+        document.querySelector(".nav");
+
+    if (!menuToggle || !nav) return;
 
 
-if (rsvpForm && formMessage && saveButton) {
+    menuToggle.addEventListener("click", () => {
+
+        const isExpanded =
+            menuToggle.getAttribute("aria-expanded") === "true";
+
+        const newState = !isExpanded;
+
+        menuToggle.setAttribute(
+            "aria-expanded",
+            String(newState)
+        );
+
+        nav.classList.toggle("open", newState);
+
+        menuToggle.textContent =
+            newState ? "×" : "☰";
+
+    });
+
+
+    // Close menu when a navigation link is selected.
+
+    nav.querySelectorAll("a").forEach((link) => {
+
+        link.addEventListener("click", () => {
+
+            nav.classList.remove("open");
+
+            menuToggle.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            menuToggle.textContent = "☰";
+
+        });
+
+    });
+
+
+    // Close menu when clicking outside.
+
+    document.addEventListener("click", (event) => {
+
+        if (
+            !nav.contains(event.target) &&
+            !menuToggle.contains(event.target)
+        ) {
+
+            nav.classList.remove("open");
+
+            menuToggle.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            menuToggle.textContent = "☰";
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   4. PHOTO GALLERY LIGHTBOX
+========================================================= */
+
+function initializeGallery() {
+
+    const lightbox =
+        document.querySelector(".lightbox");
+
+    if (!lightbox) return;
+
+    const largeImage =
+        lightbox.querySelector("img");
+
+    const closeButton =
+        lightbox.querySelector(".lightbox-close");
+
+
+    if (!largeImage) return;
+
+
+    // Open gallery image.
+
+    document.querySelectorAll(".photo-tile").forEach((tile) => {
+
+        tile.addEventListener("click", () => {
+
+            const thumbnail =
+                tile.querySelector("img");
+
+            if (!thumbnail) return;
+
+            const fullImage =
+                tile.dataset.full || thumbnail.src;
+
+            if (!fullImage) return;
+
+            largeImage.src = fullImage;
+
+            largeImage.alt = thumbnail.alt || "Wedding photo";
+
+            lightbox.classList.add("open");
+
+            lightbox.setAttribute("aria-hidden", "false");
+
+            document.body.style.overflow = "hidden";
+
+        });
+
+    });
+
+
+    // Close lightbox.
+
+    function closeLightbox() {
+
+        lightbox.classList.remove("open");
+
+        lightbox.setAttribute("aria-hidden", "true");
+
+        largeImage.src = "";
+
+        document.body.style.overflow = "";
+
+    }
+
+
+    if (closeButton) {
+
+        closeButton.addEventListener(
+            "click",
+            closeLightbox
+        );
+
+    }
+
+
+    // Close when clicking outside image.
+
+    lightbox.addEventListener("click", (event) => {
+
+        if (event.target === lightbox) {
+
+            closeLightbox();
+
+        }
+
+    });
+
+
+    // Close with Escape key.
+
+    document.addEventListener("keydown", (event) => {
+
+        if (
+            event.key === "Escape" &&
+            lightbox.classList.contains("open")
+        ) {
+
+            closeLightbox();
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   5. RSVP FORM SUBMISSION
+========================================================= */
+
+function initializeRSVP() {
+
+    const rsvpForm =
+        document.getElementById("rsvp-form");
+
+    const formMessage =
+        document.getElementById("form-message");
+
+    if (!rsvpForm || !formMessage) return;
+
+    const saveButton =
+        rsvpForm.querySelector('[type="submit"]');
+
 
     rsvpForm.addEventListener("submit", async (event) => {
 
         event.preventDefault();
 
 
-        /* -----------------------------------------------
-           VALIDATE FORM
-        ----------------------------------------------- */
+        // Validate form.
 
-        if (!rsvpForm.reportValidity()) {
+        if (!rsvpForm.reportValidity()) return;
+
+
+        // Check Supabase connection.
+
+        if (!supabaseClient) {
+
+            formMessage.textContent =
+                "The RSVP service is temporarily unavailable. Please try again later.";
+
             return;
+
         }
 
 
-        /* -----------------------------------------------
-           COLLECT FORM INFORMATION
-        ----------------------------------------------- */
+        // Collect form information.
 
-        const formData = new FormData(rsvpForm);
+        const formData =
+            new FormData(rsvpForm);
+
+        const agreementCheckbox =
+            rsvpForm.querySelector('[name="agreement"]');
+
 
         const rsvp = {
 
@@ -234,15 +314,14 @@ if (rsvpForm && formMessage && saveButton) {
 
             attending: formData.get("attending"),
 
-            agreement:
-                formData.get("agreement") === "on"
+            agreement: Boolean(
+                agreementCheckbox?.checked
+            )
 
         };
 
 
-        /* -----------------------------------------------
-           CHECK AGREEMENT
-        ----------------------------------------------- */
+        // Validate agreement.
 
         if (!rsvp.agreement) {
 
@@ -254,9 +333,7 @@ if (rsvpForm && formMessage && saveButton) {
         }
 
 
-        /* -----------------------------------------------
-           CHECK ATTENDANCE
-        ----------------------------------------------- */
+        // Validate attendance.
 
         if (!["yes", "no"].includes(rsvp.attending)) {
 
@@ -268,39 +345,33 @@ if (rsvpForm && formMessage && saveButton) {
         }
 
 
-        /* -----------------------------------------------
-           PREPARE SUBMISSION
-        ----------------------------------------------- */
+        // Disable button while submitting.
 
-        saveButton.disabled = true;
+        if (saveButton) {
 
-        saveButton.textContent = "SAVING...";
+            saveButton.disabled = true;
+
+            saveButton.textContent = "SAVING...";
+
+        }
 
         formMessage.textContent =
             "Submitting your RSVP...";
 
 
-        /* -----------------------------------------------
-           SEND RSVP TO SUPABASE
-        ----------------------------------------------- */
-
         try {
 
-            const { error, status } = await supabaseClient
+            // Send RSVP to Supabase.
+
+            const { error } = await supabaseClient
                 .from("rsvps")
                 .insert([rsvp]);
-
-
-            console.log(
-                "SUPABASE RESPONSE STATUS:",
-                status
-            );
 
 
             if (error) {
 
                 console.error(
-                    "SUPABASE INSERT ERROR:",
+                    "SUPABASE RSVP ERROR:",
                     error
                 );
 
@@ -309,9 +380,7 @@ if (rsvpForm && formMessage && saveButton) {
             }
 
 
-            /* -------------------------------------------
-               SUCCESSFUL SUBMISSION
-            ------------------------------------------- */
+            // Successful submission.
 
             console.log(
                 "RSVP SUCCESSFULLY SUBMITTED:",
@@ -326,36 +395,26 @@ if (rsvpForm && formMessage && saveButton) {
 
         } catch (error) {
 
-            /* -------------------------------------------
-               SUBMISSION FAILED
-            ------------------------------------------- */
-
             console.error(
                 "RSVP SUBMISSION FAILED:",
-                {
-                    message: error.message,
-                    code: error.code,
-                    details: error.details,
-                    hint: error.hint,
-                    status: error.status
-                }
+                error
             );
 
-
             formMessage.textContent =
-                "We couldn't save your RSVP. Please try again. " +
-                "If the problem continues, contact the couple.";
+                "We couldn't save your RSVP. Please try again. If the problem continues, contact the couple.";
 
 
         } finally {
 
-            /* -------------------------------------------
-               RESTORE SUBMIT BUTTON
-            ------------------------------------------- */
+            // Restore submit button.
 
-            saveButton.disabled = false;
+            if (saveButton) {
 
-            saveButton.textContent = "SAVE RSVP";
+                saveButton.disabled = false;
+
+                saveButton.textContent = "SAVE RSVP";
+
+            }
 
         }
 
@@ -365,13 +424,16 @@ if (rsvpForm && formMessage && saveButton) {
 
 
 /* =========================================================
-   5. SCROLL-LINKED HERO ANIMATION
+   6. CINEMATIC WEDDING HERO ANIMATION
 ========================================================= */
 
-(() => {
+function initializeWeddingHero() {
 
     const stage =
         document.getElementById("hero-stage");
+
+    const sticky =
+        document.querySelector(".wedding-hero-sticky");
 
     const frame =
         document.getElementById("wedding-hero-frame");
@@ -386,10 +448,11 @@ if (rsvpForm && formMessage && saveButton) {
         document.getElementById("scroll-hint");
 
 
-    // Stop if this page doesn't contain the hero elements
+    // Only run on the homepage.
 
     if (
         !stage ||
+        !sticky ||
         !frame ||
         !topHeading ||
         !bottomHeading ||
@@ -401,169 +464,311 @@ if (rsvpForm && formMessage && saveButton) {
     }
 
 
-    /* -----------------------------------------------
-       REDUCED MOTION ACCESSIBILITY
-    ----------------------------------------------- */
+    const photo =
+        frame.querySelector(".hero-photo");
+
+    const wash =
+        frame.querySelector(".hero-wash");
+
+
+    // Respect reduced motion preference.
 
     const reduceMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)"
     ).matches;
 
 
-    let scheduled = false;
+    let animationScheduled = false;
 
 
-    /* -----------------------------------------------
-       UPDATE HERO BASED ON SCROLL POSITION
-    ----------------------------------------------- */
+    /* =====================================================
+       FRAME STARTING DIMENSIONS
+
+       These match the CSS breakpoints so that JavaScript
+       does not overwrite the mobile frame dimensions.
+    ===================================================== */
+
+    function getStartingDimensions() {
+
+        const width = window.innerWidth;
+
+        const height = window.innerHeight;
+
+
+        // Small mobile.
+
+        if (width <= 480) {
+
+            return {
+
+                width: width * 0.88,
+
+                height: height * 0.48,
+
+                padding: 8
+
+            };
+
+        }
+
+
+        // Tablet and larger mobile.
+
+        if (width <= 700) {
+
+            return {
+
+                width: width * 0.86,
+
+                height: height * 0.52,
+
+                padding: 8
+
+            };
+
+        }
+
+
+        // Desktop.
+
+        return {
+
+            width: Math.min(width * 0.84, 940),
+
+            height: Math.min(width * 0.47, height * 0.58),
+
+            padding: 11
+
+        };
+
+    }
+
+
+    /* =====================================================
+       SMOOTH ANIMATION CALCULATION
+    ===================================================== */
+
+    function smoothStep(value) {
+
+        return value * value * (3 - 2 * value);
+
+    }
+
+
+    function clamp(value, min, max) {
+
+        return Math.min(
+            max,
+            Math.max(min, value)
+        );
+
+    }
+
+
+    /* =====================================================
+       MAIN HERO UPDATE
+    ===================================================== */
 
     function updateHero() {
 
-        scheduled = false;
+        animationScheduled = false;
 
-        const rect = stage.getBoundingClientRect();
 
-        const travel = Math.max(
+        const stageTop =
+            stage.getBoundingClientRect().top + window.scrollY;
+
+        const travelDistance = Math.max(
             1,
             stage.offsetHeight - window.innerHeight
         );
 
 
-        const progress = Math.min(
-            1,
-            Math.max(0, -rect.top / travel)
+        // Calculate scroll progress.
+
+        const progress = clamp(
+            (window.scrollY - stageTop) / travelDistance,
+            0,
+            1
         );
 
-
-        // Smooth easing
 
         const eased =
-            progress * progress * (3 - 2 * progress);
+            smoothStep(progress);
 
 
-        /* -------------------------------------------
-           INITIAL FRAME DIMENSIONS
-        ------------------------------------------- */
+        // Starting dimensions.
 
-        const startWidth = Math.min(
-            window.innerWidth * 0.84,
-            940
-        );
-
-        const startHeight = Math.min(
-            window.innerWidth * 0.47,
-            window.innerHeight * 0.58
-        );
+        const start =
+            getStartingDimensions();
 
 
-        /* -------------------------------------------
-           ANIMATE FRAME DIMENSIONS
-        ------------------------------------------- */
+        // Ending dimensions.
 
-        const width =
-            startWidth +
-            (window.innerWidth - startWidth) * eased;
+        const endWidth =
+            window.innerWidth;
 
-        const height =
-            startHeight +
-            (window.innerHeight - startHeight) * eased;
-
-        const padding = 11 * (1 - eased);
+        const endHeight =
+            window.innerHeight;
 
 
-        if (!reduceMotion) {
+        // Calculate current dimensions.
 
-            frame.style.width =
-                `${width}px`;
+        const currentWidth =
+            start.width +
+            (endWidth - start.width) * eased;
 
-            frame.style.height =
-                `${height}px`;
+        const currentHeight =
+            start.height +
+            (endHeight - start.height) * eased;
 
-            frame.style.padding =
-                `${padding}px`;
-
-
-            /* ---------------------------------------
-               FRAME BORDER
-            --------------------------------------- */
-
-            frame.style.borderColor =
-                `rgba(231,185,31,${0.48 * (1 - eased)})`;
+        const currentPadding =
+            start.padding * (1 - eased);
 
 
-            /* ---------------------------------------
-               HEADING FADE
-            --------------------------------------- */
+        /* =================================================
+           ANIMATE PHOTO FRAME
+        ================================================= */
 
-            const fade = Math.max(
-                0,
-                1 - progress / 0.38
-            );
+        frame.style.width =
+            `${currentWidth}px`;
 
-            topHeading.style.opacity = fade;
+        frame.style.height =
+            `${currentHeight}px`;
 
-            bottomHeading.style.opacity = fade;
-
-
-            /* ---------------------------------------
-               HEADING MOVEMENT
-            --------------------------------------- */
-
-            topHeading.style.transform =
-                `translateY(${-progress * 95}px)`;
-
-            bottomHeading.style.transform =
-                `translateY(${progress * 95}px)`;
+        frame.style.padding =
+            `${currentPadding}px`;
 
 
-            /* ---------------------------------------
-               SCROLL HINT FADE
-            --------------------------------------- */
+        // Keep the frame visible throughout the animation.
 
-            hint.style.opacity = String(
-                Math.max(0, 1 - progress / 0.12)
-            );
+        const borderOpacity =
+            0.9 - (0.35 * eased);
+
+        frame.style.borderColor =
+            `rgba(255, 255, 255, ${borderOpacity})`;
+
+
+        /* =================================================
+           ANIMATE PHOTO OVERLAY
+        ================================================= */
+
+        if (wash) {
+
+            wash.style.inset =
+                `${currentPadding}px`;
 
         }
+
+
+        /* =================================================
+           PHOTO APPEARANCE
+        ================================================= */
+
+        if (photo) {
+
+            const brightness =
+                0.67 + (0.18 * eased);
+
+            photo.style.filter =
+                `grayscale(${0.72 * (1 - eased)}) brightness(${brightness}) sepia(0.08)`;
+
+        }
+
+
+        /* =================================================
+           HEADING ANIMATION
+        ================================================= */
+
+        const headingFade =
+            clamp(1 - progress / 0.38, 0, 1);
+
+
+        topHeading.style.opacity =
+            headingFade;
+
+        bottomHeading.style.opacity =
+            headingFade;
+
+
+        // Move upper heading upward.
+
+        topHeading.style.transform =
+            `translateY(${-progress * 95}px)`;
+
+
+        // Move lower heading downward.
+
+        bottomHeading.style.transform =
+            `translateY(${progress * 95}px)`;
+
+
+        /* =================================================
+           SCROLL INDICATOR
+        ================================================= */
+
+        hint.style.opacity =
+            String(clamp(1 - progress / 0.12, 0, 1));
+
+
+        // Hide scroll indicator after animation.
+
+        hint.style.pointerEvents =
+            progress > 0.1 ? "none" : "auto";
 
     }
 
 
-    /* -----------------------------------------------
+    /* =====================================================
        REQUEST ANIMATION FRAME
-    ----------------------------------------------- */
+
+       Prevents excessive updates while scrolling.
+    ===================================================== */
 
     function requestUpdate() {
 
-        if (!scheduled) {
+        if (animationScheduled) return;
 
-            scheduled = true;
+        animationScheduled = true;
 
-            window.requestAnimationFrame(updateHero);
-
-        }
+        window.requestAnimationFrame(updateHero);
 
     }
 
 
-    /* -----------------------------------------------
-       SCROLL AND RESIZE LISTENERS
-    ----------------------------------------------- */
+    /* =====================================================
+       EVENT LISTENERS
+    ===================================================== */
 
-    window.addEventListener(
-        "scroll",
-        requestUpdate,
-        { passive: true }
-    );
+    if (!reduceMotion) {
 
-    window.addEventListener(
-        "resize",
-        requestUpdate
-    );
+        window.addEventListener(
+            "scroll",
+            requestUpdate,
+            { passive: true }
+        );
+
+        window.addEventListener(
+            "resize",
+            requestUpdate
+        );
+
+    }
 
 
-    // Initial animation position
+    /* =====================================================
+       INITIALIZE ANIMATION
+    ===================================================== */
 
     updateHero();
 
-})();
+
+    // Recalculate after the page has completely loaded.
+
+    window.addEventListener("load", updateHero);
+
+}
+
+
+/* =========================================================
+   END OF KATY & MICHAEL WEDDING WEBSITE JAVASCRIPT
+========================================================= */
