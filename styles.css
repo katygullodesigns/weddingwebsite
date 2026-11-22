@@ -1,9 +1,10 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Great+Vibes&display=swap');
 
 /* =========================================================
    KATY & MICHAEL — WEDDING WEBSITE
-   Main styles, responsive layouts, and cinematic home hero
-   ========================================================= */
+   Complete stylesheet
+========================================================= */
 
 :root {
   --navy: #1c2748;
@@ -16,6 +17,10 @@
   --cream: #f0e9db;
   --white: #ffffff;
 }
+
+/* =========================================================
+   GLOBAL STYLES
+========================================================= */
 
 *,
 *::before,
@@ -45,6 +50,7 @@ textarea {
 }
 
 img {
+  display: block;
   max-width: 100%;
 }
 
@@ -70,7 +76,9 @@ p {
   margin-top: 0;
 }
 
-/* -------------------- HEADER & NAVIGATION -------------------- */
+/* =========================================================
+   HEADER & NAVIGATION
+========================================================= */
 
 .site-header {
   position: relative;
@@ -118,7 +126,7 @@ p {
 }
 
 .nav a {
-  transition: color 0.2s ease;
+  transition: color 0.25s ease;
 }
 
 .nav a:hover,
@@ -135,7 +143,9 @@ p {
   font-size: 27px;
 }
 
-/* -------------------- STANDARD HERO -------------------- */
+/* =========================================================
+   STANDARD HERO
+========================================================= */
 
 .hero {
   position: relative;
@@ -144,7 +154,7 @@ p {
   height: clamp(420px, 62vw, 740px);
   max-height: 740px;
   margin: 0 auto;
-  background: #596585;
+  background: var(--slate);
 }
 
 .hero-photo {
@@ -186,7 +196,9 @@ p {
   vertical-align: middle;
 }
 
-/* -------------------- HOMEPAGE INTRO & FEATURES -------------------- */
+/* =========================================================
+   HOMEPAGE INTRODUCTION
+========================================================= */
 
 .intro {
   padding: 20px 20px 75px;
@@ -204,16 +216,21 @@ p {
   display: none;
 }
 
-.intro h1 {
-  margin: 0 0 2px;
+.intro h1,
+.intro h2 {
+  margin: 0 0 8px;
   font-size: clamp(34px, 5vw, 48px);
   font-weight: 500;
 }
 
 .intro p:last-child {
-  margin: 0;
+  margin-bottom: 0;
   font-size: clamp(18px, 2.5vw, 24px);
 }
+
+/* =========================================================
+   FEATURE ROW & DATE CARD
+========================================================= */
 
 .feature-row {
   display: grid;
@@ -252,7 +269,7 @@ p {
 }
 
 .date-card p:not(.eyebrow) {
-  margin-bottom: 42px;
+  margin: 20px 0 42px;
 }
 
 .feature-photo {
@@ -263,7 +280,9 @@ p {
   object-fit: cover;
 }
 
-/* -------------------- BUTTONS & FOOTER -------------------- */
+/* =========================================================
+   BUTTONS & FOOTER
+========================================================= */
 
 .button {
   display: inline-flex;
@@ -307,7 +326,9 @@ footer {
   text-align: center;
 }
 
-/* -------------------- GENERAL CONTENT PAGES -------------------- */
+/* =========================================================
+   GENERAL CONTENT PAGES
+========================================================= */
 
 .page-main {
   width: min(1040px, 86%);
@@ -329,20 +350,22 @@ footer {
   text-align: center;
 }
 
-/* -------------------- ACCORDIONS / FAQ -------------------- */
+/* =========================================================
+   ACCORDIONS & FAQ
+========================================================= */
 
 .accordion-section {
-  margin: 0 0 65px;
+  margin-bottom: 65px;
 }
 
 .accordion-section h2 {
-  margin: 0 0 24px;
+  margin-bottom: 24px;
   font-size: 26px;
   font-weight: 500;
 }
 
 .accordion {
-  margin: 0 0 20px;
+  margin-bottom: 20px;
   background: var(--navy);
   color: var(--white);
 }
@@ -396,7 +419,9 @@ footer {
   margin-top: 80px;
 }
 
-/* -------------------- PHOTO GALLERY & LIGHTBOX -------------------- */
+/* =========================================================
+   PHOTO GALLERY & LIGHTBOX
+========================================================= */
 
 .photos-main {
   text-align: center;
@@ -464,7 +489,9 @@ footer {
   cursor: pointer;
 }
 
-/* -------------------- RSVP FORM -------------------- */
+/* =========================================================
+   RSVP FORM
+========================================================= */
 
 .rsvp-main {
   max-width: 650px;
@@ -503,7 +530,7 @@ footer {
   border: 0;
   border-radius: 13px;
   outline: 2px solid transparent;
-  background: #1c2748;
+  background: var(--navy);
   color: var(--white);
   font: 18px Georgia, serif;
 }
@@ -620,7 +647,9 @@ footer {
   text-align: center;
 }
 
-/* -------------------- KEYBOARD ACCESSIBILITY -------------------- */
+/* =========================================================
+   KEYBOARD ACCESSIBILITY
+========================================================= */
 
 .site-header a:focus-visible,
 .button:focus-visible,
@@ -634,14 +663,14 @@ footer {
 }
 
 /* =========================================================
-   CINEMATIC SCROLL HERO — HOMEPAGE ONLY
-   The JavaScript updates the frame's width, height and padding.
-   Keep min-height at zero so CSS doesn't fight those values.
-   ========================================================= */
+   CINEMATIC HOMEPAGE SCROLL ANIMATION
+========================================================= */
 
 .home-page .site-header {
   z-index: 40;
 }
+
+/* The full scrolling section */
 
 .wedding-hero-stage {
   position: relative;
@@ -649,10 +678,13 @@ footer {
   margin-top: -4px;
 }
 
+/* Sticky animation viewport */
+
 .wedding-hero-sticky {
   position: sticky;
   top: 0;
   display: flex;
+  width: 100%;
   height: 100vh;
   min-height: 0;
   align-items: center;
@@ -664,114 +696,199 @@ footer {
       rgba(89, 101, 133, 0.22),
       transparent 70%
     ),
-    var(--slate;
+    var(--slate);
   isolation: isolate;
 }
+
+/* Main decorative photo frame */
 
 .wedding-hero-frame {
   position: absolute;
   top: 50%;
   left: 50%;
+  z-index: 1;
+
+  display: block;
+
   width: min(84vw, 940px);
   height: min(47vw, 58vh);
+
   min-width: 0;
   min-height: 0;
   max-width: none;
+
   padding: 11px;
-  border: 1px solid rgba(231, 185, 31, 0.48);
+
+  border: 1px solid rgba(255, 255, 255, 0.75);
+
   background: rgba(5, 6, 8, 0.35);
-  box-shadow: 0 50px 140px -30px rgba(0, 0, 0, 0.7);
+
+  box-shadow:
+    0 50px 140px -30px rgba(0, 0, 0, 0.7),
+    0 0 35px rgba(255, 255, 255, 0.06);
+
   transform: translate(-50%, -50%);
+
   will-change: width, height, padding, border-color;
 }
 
+/* Photograph inside frame */
+
 .wedding-hero-frame .hero-photo {
+  position: relative;
+  z-index: 0;
+
   display: block;
   width: 100%;
   height: 100%;
+
   object-fit: cover;
+
   filter: grayscale(0.72) brightness(0.67) sepia(0.08);
+
   opacity: 0.9;
 }
 
+/* Dark photographic overlay */
+
 .wedding-hero-frame .hero-wash {
   position: absolute;
+  z-index: 1;
   inset: 11px;
+
   background: linear-gradient(
     180deg,
     rgba(28, 39, 72, 0.08),
     rgba(5, 7, 16, 0.42)
   );
+
   pointer-events: none;
 }
 
+/* Center monogram */
+
 .wedding-hero-frame .hero-monogram {
+  position: absolute;
+  z-index: 3;
+
   top: 48%;
+  left: 50%;
+
+  color: var(--white);
+
+  font-family: 'Great Vibes', cursive;
   font-size: clamp(90px, 13vw, 170px);
+
+  line-height: 1;
+  white-space: nowrap;
+
   text-shadow: 0 3px 20px rgba(28, 39, 72, 0.5);
+
+  transform: translate(-50%, -50%) rotate(-7deg);
 }
+
+/* Photo caption */
 
 .hero-caption {
   position: absolute;
+  z-index: 4;
+
   right: 25px;
   bottom: 20px;
   left: 25px;
+
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
+
   margin: 0;
+
   color: #f1e6c9;
+
   font: 10px/1.4 Georgia, serif;
   letter-spacing: 0.24em;
+
+  pointer-events: none;
 }
 
 .hero-caption span {
   color: var(--white);
 }
 
+/* =========================================================
+   DECORATIVE FRAME CORNERS
+========================================================= */
+
 .hero-corner {
   position: absolute;
-  width: 16px;
-  height: 16px;
-  border: 0 solid var(--white);
-  opacity: 0.8;
+  z-index: 5;
+
+  display: block;
+
+  width: 20px;
+  height: 20px;
+
+  border: 0 solid rgba(255, 255, 255, 0.95);
+
+  opacity: 0.9;
+
   pointer-events: none;
 }
+
+/* Top left */
 
 .corner-tl {
   top: 4px;
   left: 4px;
+
   border-top-width: 1px;
   border-left-width: 1px;
 }
+
+/* Top right */
 
 .corner-tr {
   top: 4px;
   right: 4px;
+
   border-top-width: 1px;
   border-right-width: 1px;
 }
 
+/* Bottom left */
+
 .corner-bl {
   bottom: 4px;
   left: 4px;
+
   border-bottom-width: 1px;
   border-left-width: 1px;
 }
 
+/* Bottom right */
+
 .corner-br {
   right: 4px;
   bottom: 4px;
+
   border-right-width: 1px;
   border-bottom-width: 1px;
 }
 
+/* =========================================================
+   ANIMATED HEADINGS
+========================================================= */
+
 .hero-heading {
   position: absolute;
   z-index: 2;
+
   right: 20px;
   left: 20px;
+
   text-align: center;
+
   will-change: transform, opacity;
 }
 
@@ -786,7 +903,9 @@ footer {
 .hero-heading h1,
 .hero-heading h2 {
   margin: 0;
+
   color: var(--cream);
+
   font-size: clamp(34px, 5.2vw, 68px);
   font-weight: 400;
   line-height: 1.08;
@@ -799,32 +918,48 @@ footer {
 
 .hero-kicker {
   margin: 0 0 12px;
+
   color: #c9a65d;
+
   font: 10px Georgia, serif;
   letter-spacing: 0.42em;
 }
 
+/* =========================================================
+   SCROLL INDICATOR
+========================================================= */
+
 .scroll-hint {
   position: absolute;
+  z-index: 6;
+
   bottom: 18px;
   left: 50%;
+
   display: flex;
   align-items: center;
   flex-direction: column;
   gap: 10px;
+
   color: #929bb0;
+
   font: 9px Georgia, serif;
   letter-spacing: 0.32em;
   white-space: nowrap;
+
   transform: translateX(-50%);
 }
 
 .scroll-hint i {
   position: relative;
+
   display: block;
+
   width: 1px;
   height: 29px;
+
   overflow: hidden;
+
   background: rgba(255, 255, 255, 0.16);
 }
 
@@ -832,10 +967,14 @@ footer {
   position: absolute;
   top: -12px;
   left: 0;
+
   width: 1px;
   height: 12px;
+
   background: var(--white);
+
   content: '';
+
   animation: hint-drop 1.7s ease-in-out infinite;
 }
 
@@ -845,13 +984,18 @@ footer {
   }
 }
 
+/* Space after cinematic hero */
+
 .home-page .intro {
   padding-top: 72px;
 }
 
-/* -------------------- TABLET & MOBILE -------------------- */
+/* =========================================================
+   TABLET & MOBILE
+========================================================= */
 
 @media (max-width: 700px) {
+
   .site-header {
     min-height: 90px;
   }
@@ -930,11 +1074,14 @@ footer {
     margin-bottom: 8px;
   }
 
+  /* Mobile cinematic animation */
+
   .wedding-hero-stage {
     height: 190vh;
   }
 
   .wedding-hero-sticky {
+    height: 100vh;
     min-height: 0;
   }
 
@@ -961,6 +1108,7 @@ footer {
     right: 16px;
     bottom: 14px;
     left: 16px;
+
     font-size: 8px;
     letter-spacing: 0.13em;
   }
@@ -979,7 +1127,12 @@ footer {
   }
 }
 
+/* =========================================================
+   SMALL MOBILE SCREENS
+========================================================= */
+
 @media (max-width: 480px) {
+
   .site-header {
     width: 90%;
     min-height: 78px;
@@ -993,14 +1146,21 @@ footer {
     position: absolute;
     top: 70px;
     right: 0;
+
     display: none;
+
     min-width: 155px;
+
     flex-direction: column;
     align-items: stretch;
     gap: 0;
+
     padding: 10px 22px;
+
     border-radius: 12px;
+
     background: var(--slate);
+
     box-shadow: 0 10px 25px #111a;
   }
 
@@ -1020,7 +1180,8 @@ footer {
     font-size: 100px;
   }
 
-  .intro h1 {
+  .intro h1,
+  .intro h2 {
     font-size: 35px;
   }
 
@@ -1068,6 +1229,8 @@ footer {
     font-size: 23px;
   }
 
+  /* Smaller cinematic scroll area */
+
   .wedding-hero-stage {
     height: 170vh;
   }
@@ -1102,8 +1265,12 @@ footer {
   }
 }
 
-/* Respect the visitor's reduced-motion preference. */
+/* =========================================================
+   REDUCED MOTION ACCESSIBILITY
+========================================================= */
+
 @media (prefers-reduced-motion: reduce) {
+
   html {
     scroll-behavior: auto;
   }
