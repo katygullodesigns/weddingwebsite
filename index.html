@@ -51,49 +51,63 @@
 
   <main>
 
-    <!-- Cinematic scrolling hero -->
-    <section
-      class="wedding-hero-stage"
-      id="hero-stage"
-      aria-label="Katy and Michael wedding introduction"
-    >
-     <div class="wedding-hero-frame" id="wedding-hero-frame">
+    
+<!-- Cinematic scrolling hero -->
+<section
+  class="wedding-hero-stage"
+  id="hero-stage"
+  aria-label="Katy and Michael wedding introduction"
+>
 
-  <img
-    src="assets/photo_3.png"
-    alt="Katy and Michael together outdoors"
-    class="hero-photo"
-  >
+  <!-- Sticky viewport: REQUIRED for the scroll animation -->
+  <div class="wedding-hero-sticky">
 
-  <div class="hero-wash" aria-hidden="true"></div>
+    <!-- Top animated heading -->
+    <div class="hero-heading hero-heading-top" id="hero-heading-top">
+      <p class="hero-kicker">TOGETHER WITH THEIR FAMILIES</p>
+      <h1>Katy &amp; Michael</h1>
+    </div>
 
-  <div class="hero-monogram" aria-label="M plus K"></div>
+    <!-- Main photo frame -->
+    <div class="wedding-hero-frame" id="wedding-hero-frame">
 
-  <p class="hero-caption">
-    KATY &amp; MICHAEL
-    <span aria-hidden="true">·</span>
-    OCTOBER 13, 2028
-  </p>
+      <img
+        src="assets/photo_3.png"
+        alt="Katy and Michael together outdoors"
+        class="hero-photo"
+      >
 
-  <span class="hero-corner corner-tl"></span>
-  <span class="hero-corner corner-tr"></span>
-  <span class="hero-corner corner-bl"></span>
-  <span class="hero-corner corner-br"></span>
+      <div class="hero-wash" aria-hidden="true"></div>
 
-</div>
+      <div class="hero-monogram" aria-label="M plus K"></div>
 
-        <div
-          class="hero-heading hero-heading-bottom"
-          id="hero-heading-bottom"
-        ></div>
+      <p class="hero-caption">
+        KATY &amp; MICHAEL
+        <span aria-hidden="true">·</span>
+        OCTOBER 13, 2028
+      </p>
 
-        <div class="scroll-hint" id="scroll-hint">
-          <span>SCROLL TO CELEBRATE</span>
-          <i aria-hidden="true"></i>
-        </div>
+      <span class="hero-corner corner-tl"></span>
+      <span class="hero-corner corner-tr"></span>
+      <span class="hero-corner corner-bl"></span>
+      <span class="hero-corner corner-br"></span>
 
-      </div>
-    </section>
+    </div>
+
+    <!-- Bottom animated heading -->
+    <div class="hero-heading hero-heading-bottom" id="hero-heading-bottom">
+      <h2>Our Forever Begins</h2>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-hint" id="scroll-hint">
+      <span>SCROLL TO CELEBRATE</span>
+      <i aria-hidden="true"></i>
+    </div>
+
+  </div>
+</section>
+
 
     <!-- Wedding introduction -->
     <section class="intro">
